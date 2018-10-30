@@ -12,7 +12,6 @@ public class PossessBall : PossessObject {
 	
 	// Update is called once per frame
 	void Update () {
-		print(speed);
 	}
 
 	public override void ActivateAbility() {

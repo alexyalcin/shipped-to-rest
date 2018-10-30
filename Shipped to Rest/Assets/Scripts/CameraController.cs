@@ -14,11 +14,12 @@ public class CameraController : MonoBehaviour
 	public Transform target;
 	public float smooth = .1f;
 	public float distance = 3f;
+	private float center_offset = .8f;
 	// Setting for how the mouse should look
 	public RotationAxes axes = RotationAxes.MouseXandY;
 
 	// General settings - sensitivity
-	[SerializeField] private float sensitivityHor = 3.0f;
+	[SerializeField] private float sensitivityHor = 4.0f;
 	[SerializeField] private float sensitivityVert = 9.0f;
 	// General settings - y rotation constraints
 	[SerializeField] private float maxVert = 45f;
@@ -29,6 +30,11 @@ public class CameraController : MonoBehaviour
 	// Our variable is kept in range -45 to 45.
 	private float rotationX = 0;
 
+	void Start() {
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Confined;
+	}
+
 	void SetTarget(Transform target) {
 		this.target = target;
 	}
@@ -37,6 +43,9 @@ public class CameraController : MonoBehaviour
 	{
 		Vector3 angle = new Vector3 (0, 0, -1);
 		transform.localPosition = (angle * distance);
+		Vector3 newPos = (angle * distance);
+		newPos.y = newPos.y += center_offset;
+		transform.localPosition = newPos;
 		float currentXRot = target.eulerAngles.x;
 		float currentYRot = target.eulerAngles.y;
 		float xRot = getXRot();
