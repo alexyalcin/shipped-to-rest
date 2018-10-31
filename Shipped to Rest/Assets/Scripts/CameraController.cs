@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
 
 	public Transform target;
 	public float smooth = .1f;
-	public float distance = 3f;
+	public float distance = 1f;
 	private float center_offset = .8f;
 	// Setting for how the mouse should look
 	public RotationAxes axes = RotationAxes.MouseXandY;

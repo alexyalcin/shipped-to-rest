@@ -6,7 +6,7 @@ public abstract class PossessObject : MonoBehaviour {
 
 	public float speed;
 
-	private Rigidbody rb;
+	protected Rigidbody rb;
 	public void setRigidbody(Rigidbody rb){
 		this.rb = rb;
 	}

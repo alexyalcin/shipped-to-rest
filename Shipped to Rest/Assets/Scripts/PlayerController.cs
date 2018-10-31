@@ -1,19 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
 	public Camera camera; 
 	public PossessObject currentObject;
+	[SerializeField] private Text interactMessage;
+	[SerializeField] private UIController ui;
+
+	private List<InventoryItem> inventory;
 
 	// Use this for initialization
 	void Start () {
-		
+		inventory = new List<InventoryItem> ();
 	}
 		
-	GameObject Interact(){
-		return null;
+	void Interact(){
+		Transform t = CheckInteract ();
+		if (t == null)
+			return;
+		if (t.tag == "Possessable") {
+			ChangeObject (t.gameObject.GetComponent<PossessObject>());
+		} else if (t.tag == "Item"){
+			inventory.Add (t.gameObject.GetComponent<InventoryItem> ());
+			print ("key added");
+			ui.SendMessage ("Key added");
+			t.gameObject.SetActive (false);
+		} 
 	}
 
 	void ChangeObject(PossessObject obj) {
@@ -24,36 +39,41 @@ public class PlayerController : MonoBehaviour {
 		
 	}
 
-	GameObject CheckInteract() {
-		float INTERACT_DISTANCE = 5f;
-
-		if (Input.GetMouseButtonDown (0)) {
+	Transform CheckInteract() {
+		float INTERACT_DISTANCE = 10f;
+		Transform obj = null;
 			print ("clicked");
 			Vector3 origin = new Vector3 (camera.pixelWidth / 2,
 				                camera.pixelHeight / 2,
 				currentObject.transform.position.z);
 			Ray ray = camera.ScreenPointToRay (origin);
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit)) {
-				StartCoroutine (Shoot (hit.point));
+			if (Physics.Raycast (ray, out hit, INTERACT_DISTANCE)) {
+			obj = hit.transform;
+			if (hit.transform.tag == "Untagged") {
+				interactMessage.text = "";
+			} else {
+				interactMessage.text = "[E] ";
+				if (hit.transform.gameObject.GetComponent<PossessObject>() != null){
+					interactMessage.text += "Possess";
+				} else if (hit.transform.tag == "Item"){
+					interactMessage.text += "Pick Up";
+				} else if (hit.transform.tag == "") {
+					
+				}
+			} 
+		} else {
+			if (interactMessage.text != ""){
+				interactMessage.text = "";
 			}
 		}
-		return this.gameObject;
-	}
-
-	private IEnumerator Shoot(Vector3 position)
-	{
-		GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		sphere.transform.position = position;
-		sphere.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-		yield return new WaitForSeconds(1);
-		Destroy(sphere);
+		return obj;
 	}
 
 	void InputHandler() {
-		if (Input.GetMouseButtonDown(0)){
-			Interact();
-		} 
+		if (Input.GetKeyDown("e")){
+			Interact ();
+		}
 		if (Input.GetKey("w")){
 			currentObject.Move (this.transform.forward);
 		}
@@ -65,6 +85,9 @@ public class PlayerController : MonoBehaviour {
 		} 
 		if (Input.GetKey("a")) {
 			currentObject.Move(-1 * this.transform.right);
+		}
+		if (Input.GetKeyDown("space")){
+			currentObject.ActivateAbility ();
 		}
 
 	}
