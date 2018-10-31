@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
@@ -16,28 +17,59 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		inventory = new List<InventoryItem> ();
 	}
-		
-	void Interact(){
-		Transform t = CheckInteract ();
-		if (t == null)
-			return;
-		if (t.tag == "Possessable") {
-			ChangeObject (t.gameObject.GetComponent<PossessObject>());
-		} else if (t.tag == "Item"){
-			inventory.Add (t.gameObject.GetComponent<InventoryItem> ());
-			print ("key added");
-			ui.SendMessage ("Key added");
-			t.gameObject.SetActive (false);
-		} 
-	}
 
-	void ChangeObject(PossessObject obj) {
+    void Interact()
+    {
+        Transform t = CheckInteract();
+        if (t == null)
+            return;
+        if (t.tag == "Possessable")
+        {
+            ChangeObject(t.gameObject.GetComponent<PossessObject>());
+        }
+        else if (t.tag == "Item")
+        {
+            inventory.Add(t.gameObject.GetComponent<InventoryItem>());
+            print("key added");
+            ui.SendMessage("Key added");
+            t.gameObject.SetActive(false);
+        }
+        else if (t.tag == "ExitDoor")
+        {
+            if (t.gameObject.GetComponent<DoorScript>().Interact(this) == false)
+            {
+                ui.SendMessage("Door is locked...", 2);
+            }
+            else
+            {
+                ui.SendMessage("Door Opened!!", 5);
+                StartCoroutine(LoadVideo(5f));            }
+        }
+    }
+
+    private IEnumerator LoadVideo(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        SceneManager.LoadScene(sceneName: "FinishVideo");
+
+    }
+
+    public void ChangeObject(PossessObject obj) {
 		currentObject = obj;
 	}
 
 	void LeaveObject() {
 		
 	}
+
+    public bool HasItem(string id)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].GetId() == id) return true;
+        }
+        return false;
+    }
 
 	Transform CheckInteract() {
 		float INTERACT_DISTANCE = 10f;
@@ -58,8 +90,8 @@ public class PlayerController : MonoBehaviour {
 					interactMessage.text += "Possess";
 				} else if (hit.transform.tag == "Item"){
 					interactMessage.text += "Pick Up";
-				} else if (hit.transform.tag == "") {
-					
+				} else if (hit.transform.tag == "ExitDoor") {
+                    interactMessage.text += "Open";
 				}
 			} 
 		} else {

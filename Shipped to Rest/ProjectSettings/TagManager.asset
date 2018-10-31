@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ball
+  - Door
+  - ExitDoor
+  - Interactable
+  - Possessable
+  - Item
   layers:
   - Default
   - TransparentFX

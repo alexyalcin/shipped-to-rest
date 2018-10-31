@@ -5,7 +5,7 @@ using UnityEngine;
 public class PossessBall : PossessObject {
 	public float SPEED = 6f;
 	public float JUMP_SPEED = 350f;
-	[SerializeField] private bool flymode = true;
+	public bool flymode = false;
 	// Use this for initialization
 	void Start () {
 		speed = SPEED;
