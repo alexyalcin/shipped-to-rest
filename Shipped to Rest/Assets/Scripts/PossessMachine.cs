@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PossessMachine : MonoBehaviour {
-
+public class PossessMachine : PossessObject {
+    [SerializeField] GameObject machine;
 	// Use this for initialization
 	void Start () {
 		
@@ -13,4 +13,8 @@ public class PossessMachine : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void Move(Vector3 dir) {
+        machine.position;
+    }
 }
