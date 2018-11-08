@@ -10,6 +10,7 @@ TagManager:
   - Interactable
   - Possessable
   - Item
+  - ConveyorBelt
   layers:
   - Default
   - TransparentFX

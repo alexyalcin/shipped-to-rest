@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour {
             {
                 ui.SendMessage("Door Opened!!", 5);
                 StartCoroutine(LoadVideo(5f));            }
+        } else if (t.tag == "Machine") {
+            t.gameObject.GetComponent<MachineMove>().Move();
         }
     }
 
