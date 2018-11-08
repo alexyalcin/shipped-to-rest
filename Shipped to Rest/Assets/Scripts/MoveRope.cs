@@ -20,18 +20,12 @@ public class MoveRope : PossessObject{
     {
         if (Input.GetKey("up"))
         {
-            lift.transform.Translate(Vector3.up * Time.deltaTime);
+            lift.transform.Translate(Vector3.up * Time.deltaTime * 2);
         }
         if (Input.GetKey("down"))
         {
-            lift.transform.Translate(Vector3.down * Time.deltaTime);
+            lift.transform.Translate(Vector3.down * Time.deltaTime * 2);
             }
-        if (Input.GetKey("left")){
-            lift.transform.Rotate(Vector3.left * Time.deltaTime);
-        }
-        if(Input.GetKey("right")){
-            lift.transform.Rotate(Vector3.right * Time.deltaTime);
-        }
 
     }
 
