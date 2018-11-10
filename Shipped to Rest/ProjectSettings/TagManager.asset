@@ -11,6 +11,11 @@ TagManager:
   - Possessable
   - Item
   - ConveyorBelt
+  - Key1
+  - Key2
+  - UpButt
+  - DownButt
+  - DownstairsDoor
   layers:
   - Default
   - TransparentFX

@@ -6,14 +6,15 @@ public class OpenCeiling : MonoBehaviour {
 
     Vector3 pos = new Vector3(0.0f, 11.5f, 20.0f);
     Vector3 deletePos = new Vector3(0.0f, 11.0f, 13.0f);
-
-	// Use this for initialization
-	void Start () {
+    [SerializeField] private string keyID;
+    // Use this for initialization
+    void Start () {
 	    
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
         if(Input.GetKey("o")){
             openTheCeiling();
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PossessObject : MonoBehaviour {
+public abstract class PossessObject : MonoBehaviour, IInteractable {
 
 	public float speed;
 
@@ -16,5 +16,10 @@ public abstract class PossessObject : MonoBehaviour {
 	public void Move(Vector3 dir){
 		rb.AddForce (speed * dir);
 	}
+
+    public string GetMessage()
+    {
+        return "Possess";
+    }
 
 }

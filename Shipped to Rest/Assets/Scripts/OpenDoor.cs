@@ -5,11 +5,12 @@ using UnityEngine;
 public class OpenDoor : MonoBehaviour
 {
 
-    public float doorOpenAngle = 90.0f;
-    public float doorCloseAngle = 0.0f;
-    public float doorAnimSpeed = 2.0f;
+    private float doorOpenAngle = 180.0f;
+    private float doorCloseAngle = 90.0f;
+    private float doorAnimSpeed = 2.0f;
     private Quaternion doorOpen = Quaternion.identity;
     private Quaternion doorClose = Quaternion.identity;
+    [SerializeField] private string keyID;
     public bool doorStatus = false; 
     private bool doorGo = false; 
     void Start()
@@ -22,10 +23,10 @@ public class OpenDoor : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.O) && !doorGo)
+        if (Input.GetKey("n") && doorGo == false)
         {
             {
-                if (doorStatus)
+                if (doorStatus == true)
                 { 
                     StartCoroutine(this.moveDoor(doorClose));
                 }
@@ -51,5 +52,18 @@ public class OpenDoor : MonoBehaviour
         doorGo = false;
 
         yield return null;
+    }
+
+    public bool Interact(PlayerController pc)
+    {
+        if (pc.HasItem(keyID))
+        {
+            moveDoor(doorOpen);
+        }
+        else{
+            return true;
+        }
+        return false;
+
     }
 }

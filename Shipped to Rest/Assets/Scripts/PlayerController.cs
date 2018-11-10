@@ -8,8 +8,9 @@ public class PlayerController : MonoBehaviour {
 
 	public Camera camera; 
 	public PossessObject currentObject;
-	[SerializeField] private Text interactMessage;
 	[SerializeField] private UIController ui;
+    private MoveRope mr;
+
 
 	private List<InventoryItem> inventory;
 
@@ -43,11 +44,26 @@ public class PlayerController : MonoBehaviour {
             else
             {
                 ui.SendMessage("Door Opened!!", 5);
-                StartCoroutine(LoadVideo(5f));            }
-        } else if (t.tag == "Machine") {
-            t.gameObject.GetComponent<MachineMove>().Move();
+                StartCoroutine(LoadVideo(5f));
+            }
         }
-    }
+              else if (t.tag == "DownstairsDoor")
+            {
+                if (t.gameObject.GetComponent<OpenDoor>().Interact(this) == false)
+                {
+                    ui.SendMessage("Door is locked...", 2);
+                }
+                else
+                {
+                    ui.SendMessage("Door Opened!!", 5);
+                    StartCoroutine(LoadVideo(5f));
+                }
+            }
+            else if (t.tag == "Machine")
+            {
+                t.gameObject.GetComponent<MachineMove>().Move();
+            }
+        }
 
     private IEnumerator LoadVideo(float waitTime)
     {
@@ -74,7 +90,7 @@ public class PlayerController : MonoBehaviour {
     }
 
 	Transform CheckInteract() {
-		float INTERACT_DISTANCE = 10f;
+		float INTERACT_DISTANCE = 8f;
 		Transform obj = null;
 			print ("clicked");
 			Vector3 origin = new Vector3 (camera.pixelWidth / 2,
@@ -84,21 +100,14 @@ public class PlayerController : MonoBehaviour {
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit, INTERACT_DISTANCE)) {
 			obj = hit.transform;
-			if (hit.transform.tag == "Untagged") {
-				interactMessage.text = "";
+            if (hit.transform.gameObject.GetComponent<IInteractable>() == null) {
+                ui.ClearPointerText();
 			} else {
-				interactMessage.text = "[E] ";
-				if (hit.transform.gameObject.GetComponent<PossessObject>() != null){
-					interactMessage.text += "Possess";
-				} else if (hit.transform.tag == "Item"){
-					interactMessage.text += "Pick Up";
-				} else if (hit.transform.tag == "ExitDoor") {
-                    interactMessage.text += "Open";
-				}
+                ui.SetPointerText(hit.transform.gameObject.GetComponent<IInteractable>().GetMessage());
 			} 
 		} else {
-			if (interactMessage.text != ""){
-				interactMessage.text = "";
+			if (!ui.PointerIsClear()){
+                ui.ClearPointerText();
 			}
 		}
 		return obj;
@@ -131,4 +140,8 @@ public class PlayerController : MonoBehaviour {
 		this.gameObject.transform.position = currentObject.transform.position;
 		CheckInteract ();
 	}
+
+    public string ObjectName(){
+        return currentObject.name;
+    }
 }

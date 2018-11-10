@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorScript : MonoBehaviour {
+public class DoorScript : MonoBehaviour, IInteractable {
 
     [SerializeField] private bool unlocked = false;
     private bool open = false;
@@ -23,6 +23,11 @@ public class DoorScript : MonoBehaviour {
     private void openDoor()
     {
 
+    }
+
+    public string GetMessage()
+    {
+        return "Open";
     }
 
     
